@@ -40,11 +40,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future getPlantId() async {
-    var collectionData =
-        await FirebaseFirestore.instance.collection('plantCollection').get();
+    var collectionData = await FirebaseFirestore.instance
+        .collection("plantCollection")
+        .orderBy("name")
+        .get();
 
     plantId.clear();
     for (int i = 0; i < collectionData.docs.length; i++) {
+      print(collectionData.docs[i].data()['name']);
       String imageUrl =
           await downloadURL("plants", collectionData.docs[i].data()['name']);
       plantId.add(Product(
@@ -82,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    getPlantId();
     super.initState();
   }
 
@@ -193,71 +197,60 @@ class _HomeScreenState extends State<HomeScreen> {
                                     margin:
                                         const EdgeInsets.only(bottom: 100.0),
                                     padding: const EdgeInsets.all(8),
-                                    child: FutureBuilder(
-                                        future: getPlantId(),
-                                        builder: (context, snapshot) {
-                                          return GridView.builder(
-                                            itemCount: plantId.length,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              childAspectRatio: 0.75,
-                                              mainAxisSpacing: 20,
-                                              crossAxisSpacing: 20,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              print(plantId.length);
-                                              return ProductCard(
-                                                product: plantId[index],
-                                                press: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    PageRouteBuilder(
-                                                      transitionDuration:
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                      reverseTransitionDuration:
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                      pageBuilder: (context,
-                                                              animation,
-                                                              secondaryAnimation) =>
-                                                          FadeTransition(
-                                                        opacity: animation,
-                                                        child: DetailsScreen(
-                                                          product:
-                                                              plantId[index],
-                                                          onProductAdd: () {
-                                                            final cartNum =
-                                                                ref.watch(
-                                                                        cartNumProvider) ??
-                                                                    1;
-                                                            for (var i = 0;
-                                                                i < cartNum;
-                                                                i++) {
-                                                              controller
-                                                                  .addProductToCart(
-                                                                      plantId[
-                                                                          index]);
-                                                            }
-                                                            ref
-                                                                .read(cartNumProvider
-                                                                    .notifier)
-                                                                .update(
-                                                                    (state) =>
-                                                                        1);
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                        }),
+                                    child: GridView.builder(
+                                      itemCount: plantId.length,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 0.75,
+                                        mainAxisSpacing: 20,
+                                        crossAxisSpacing: 20,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        print(plantId.length);
+                                        return ProductCard(
+                                          product: plantId[index],
+                                          press: () {
+                                            Navigator.push(
+                                              context,
+                                              PageRouteBuilder(
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 500),
+                                                reverseTransitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 500),
+                                                pageBuilder: (context,
+                                                        animation,
+                                                        secondaryAnimation) =>
+                                                    FadeTransition(
+                                                  opacity: animation,
+                                                  child: DetailsScreen(
+                                                    product: plantId[index],
+                                                    onProductAdd: () {
+                                                      final cartNum = ref.watch(
+                                                              cartNumProvider) ??
+                                                          1;
+                                                      for (var i = 0;
+                                                          i < cartNum;
+                                                          i++) {
+                                                        controller
+                                                            .addProductToCart(
+                                                                plantId[index]);
+                                                      }
+                                                      ref
+                                                          .read(cartNumProvider
+                                                              .notifier)
+                                                          .update((state) => 1);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                           ),
                         ],
