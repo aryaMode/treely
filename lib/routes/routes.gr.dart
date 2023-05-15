@@ -1,98 +1,145 @@
-// **************************************************************************
-// AutoRouteGenerator
-// **************************************************************************
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
-// AutoRouteGenerator
+// AutoRouterGenerator
 // **************************************************************************
-//
+
 // ignore_for_file: type=lint
+// coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i4;
-import 'package:flutter/material.dart' as _i5;
+import 'package:auto_route/auto_route.dart' as _i7;
+import 'package:treely/modules/authScreen/login_screen.dart' as _i3;
+import 'package:treely/modules/authScreen/signup_screen.dart' as _i2;
+import 'package:treely/modules/authScreen/welcome_screen.dart' as _i4;
+import 'package:treely/modules/homeScreen/home_screen.dart' as _i6;
+import 'package:treely/modules/onboardingPages/onboarding_screen.dart' as _i1;
+import 'package:treely/modules/SplashScreen/screens/splash_screen.dart' as _i5;
 
-import '../modules/onboardingPages/onboarding_screen.dart' as _i3;
-import '../modules/SplashScreen/screens/splash_screen.dart' as _i1;
-import '../modules/welcomeScreen/welcome_screen.dart' as _i2;
-
-class AppRouter extends _i4.RootStackRouter {
-  AppRouter([_i5.GlobalKey<_i5.NavigatorState>? navigatorKey])
-      : super(navigatorKey);
+abstract class $AppRouter extends _i7.RootStackRouter {
+  $AppRouter({super.navigatorKey});
 
   @override
-  final Map<String, _i4.PageFactory> pagesMap = {
-    SplashScreen.name: (routeData) {
-      return _i4.MaterialPageX<dynamic>(
+  final Map<String, _i7.PageFactory> pagesMap = {
+    OnboardingScreen.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i1.SplashScreen(),
+        child: const _i1.OnboardingScreen(),
+      );
+    },
+    SignupScreen.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i2.SignupScreen(),
+      );
+    },
+    LoginScreen.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i3.LoginScreen(),
       );
     },
     WelcomeScreen.name: (routeData) {
-      return _i4.MaterialPageX<dynamic>(
+      return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.WelcomeScreen(),
+        child: const _i4.WelcomeScreen(),
       );
     },
-    OnboardingScreen.name: (routeData) {
-      return _i4.MaterialPageX<dynamic>(
+    SplashScreen.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i3.OnboardingScreen(),
+        child: const _i5.SplashScreen(),
+      );
+    },
+    HomeScreen.name: (routeData) {
+      return _i7.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i6.HomeScreen(),
       );
     },
   };
-
-  @override
-  List<_i4.RouteConfig> get routes => [
-        _i4.RouteConfig(
-          SplashScreen.name,
-          path: '/',
-        ),
-        _i4.RouteConfig(
-          WelcomeScreen.name,
-          path: '/welcome-screen',
-        ),
-        _i4.RouteConfig(
-          OnboardingScreen.name,
-          path: '/onboarding-screen',
-        ),
-      ];
 }
 
 /// generated route for
-/// [_i1.SplashScreen]
-class SplashScreen extends _i4.PageRouteInfo<void> {
-  const SplashScreen()
-      : super(
-          SplashScreen.name,
-          path: '/',
-        );
-
-  static const String name = 'SplashScreen';
-}
-
-/// generated route for
-/// [_i2.WelcomeScreen]
-class WelcomeScreen extends _i4.PageRouteInfo<void> {
-  const WelcomeScreen()
-      : super(
-          WelcomeScreen.name,
-          path: '/welcome-screen',
-        );
-
-  static const String name = 'WelcomeScreen';
-}
-
-/// generated route for
-/// [_i3.OnboardingScreen]
-class OnboardingScreen extends _i4.PageRouteInfo<void> {
-  const OnboardingScreen()
+/// [_i1.OnboardingScreen]
+class OnboardingScreen extends _i7.PageRouteInfo<void> {
+  const OnboardingScreen({List<_i7.PageRouteInfo>? children})
       : super(
           OnboardingScreen.name,
-          path: '/onboarding-screen',
+          initialChildren: children,
         );
 
   static const String name = 'OnboardingScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.SignupScreen]
+class SignupScreen extends _i7.PageRouteInfo<void> {
+  const SignupScreen({List<_i7.PageRouteInfo>? children})
+      : super(
+          SignupScreen.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SignupScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i3.LoginScreen]
+class LoginScreen extends _i7.PageRouteInfo<void> {
+  const LoginScreen({List<_i7.PageRouteInfo>? children})
+      : super(
+          LoginScreen.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoginScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i4.WelcomeScreen]
+class WelcomeScreen extends _i7.PageRouteInfo<void> {
+  const WelcomeScreen({List<_i7.PageRouteInfo>? children})
+      : super(
+          WelcomeScreen.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'WelcomeScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i5.SplashScreen]
+class SplashScreen extends _i7.PageRouteInfo<void> {
+  const SplashScreen({List<_i7.PageRouteInfo>? children})
+      : super(
+          SplashScreen.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SplashScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i6.HomeScreen]
+class HomeScreen extends _i7.PageRouteInfo<void> {
+  const HomeScreen({List<_i7.PageRouteInfo>? children})
+      : super(
+          HomeScreen.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeScreen';
+
+  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
 }

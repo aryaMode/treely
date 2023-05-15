@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1000232709789",
+    "project_id": "treely-8c2c8",
+    "storage_bucket": "treely-8c2c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000232709789:android:0c81a5c5e5b01a8521ee74",
+        "android_client_info": {
+          "package_name": "com.treely.epics.treely"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000232709789-mjo4brv1a13ipf44lbnlfr4lvsuqc23d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB16GtVExlUrpMLlcveKdFkb6Pzi_BbGyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000232709789-mjo4brv1a13ipf44lbnlfr4lvsuqc23d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,21 +1,40 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:treely/modules/SplashScreen/screens/splash_screen.dart';
-import 'package:treely/modules/onboardingPages/onboarding_screen.dart';
-import 'package:treely/modules/welcomeScreen/welcome_screen.dart';
+import 'package:treely/routes/routes.gr.dart';
 
-// @CupertinoAutoRouter              
-// @AdaptiveAutoRouter              
-// @CustomAutoRouter              
+// @CupertinoAutoRouter
+// @AdaptiveAutoRouter
+// @CustomAutoRouter
 
-@MaterialAutoRouter(              
-  replaceInRouteName: 'Page,Route',              
-  routes: <AutoRoute>[              
-    AutoRoute(page: SplashScreen, initial: true),              
-    AutoRoute(page: WelcomeScreen),     
-    AutoRoute(page: OnboardingScreen),         
-  ],              
-)              
-class $AppRouter {}              
+// @AutoRouterConfig()
+// class AppRouter extends $AppRouter{
+//   @override
+//   List<AutoRoute> get routes => [
 
-// flutter packages pub run build_runner build              
+//     AutoRoute(page: SplashRoute.page, initial: true),
+//     AutoRoute(page: WelcomeRoute.page),
+//     AutoRoute(page: OnboardingRoute.page),
+//     AutoRoute(page: LoginRoute.page),
+//     AutoRoute(page: SignupRoute.page),
+//     AutoRoute(page: HomeRoute.page),
+//   ];
+// }
+
+@AutoRouterConfig(
+  replaceInRouteName: 'Page,Route',
+)
+class AppRouter extends $AppRouter {
+  @override
+  RouteType get defaultRouteType => RouteType.material();
+  @override
+  final List<AutoRoute> routes = [
+    AutoRoute(page: SplashScreen.page, path: '/'),
+    AutoRoute(page: WelcomeScreen.page),
+    AutoRoute(page: OnboardingScreen.page),
+    AutoRoute(page: LoginScreen.page),
+    AutoRoute(page: SignupScreen.page),
+    AutoRoute(page: HomeScreen.page),
+  ];
+}
+
+// flutter packages pub run build_runner build
 // flutter packages pub run build_runner watch
