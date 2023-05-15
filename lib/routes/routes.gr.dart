@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i7;
+import 'package:flutter/material.dart' as _i8;
 import 'package:treely/modules/authScreen/login_screen.dart' as _i3;
 import 'package:treely/modules/authScreen/signup_screen.dart' as _i2;
 import 'package:treely/modules/authScreen/welcome_screen.dart' as _i4;
@@ -28,9 +29,11 @@ abstract class $AppRouter extends _i7.RootStackRouter {
       );
     },
     SignupScreen.name: (routeData) {
+      final args = routeData.argsAs<SignupScreenArgs>(
+          orElse: () => const SignupScreenArgs());
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.SignupScreen(),
+        child: _i2.SignupScreen(key: args.key),
       );
     },
     LoginScreen.name: (routeData) {
@@ -76,16 +79,31 @@ class OnboardingScreen extends _i7.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.SignupScreen]
-class SignupScreen extends _i7.PageRouteInfo<void> {
-  const SignupScreen({List<_i7.PageRouteInfo>? children})
-      : super(
+class SignupScreen extends _i7.PageRouteInfo<SignupScreenArgs> {
+  SignupScreen({
+    _i8.Key? key,
+    List<_i7.PageRouteInfo>? children,
+  }) : super(
           SignupScreen.name,
+          args: SignupScreenArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'SignupScreen';
 
-  static const _i7.PageInfo<void> page = _i7.PageInfo<void>(name);
+  static const _i7.PageInfo<SignupScreenArgs> page =
+      _i7.PageInfo<SignupScreenArgs>(name);
+}
+
+class SignupScreenArgs {
+  const SignupScreenArgs({this.key});
+
+  final _i8.Key? key;
+
+  @override
+  String toString() {
+    return 'SignupScreenArgs{key: $key}';
+  }
 }
 
 /// generated route for

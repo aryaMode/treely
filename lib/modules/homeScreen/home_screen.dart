@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   bool switchValue = false;
 
-  List<Product> plantId = [];
-  List<Product> ayurId = [];
+  Future<List<Product>>? plantId;
+  Future<List<Product>>? ayurId;
 
   Future<String> downloadURL(String pathName, String imageName) async {
     return FirebaseStorage.instance
@@ -39,37 +40,38 @@ class _HomeScreenState extends State<HomeScreen> {
         .getDownloadURL();
   }
 
-  Future getPlantId() async {
+  Future<List<Product>> getPlantId() async {
     var collectionData = await FirebaseFirestore.instance
         .collection("plantCollection")
         .orderBy("name")
         .get();
-
-    plantId.clear();
+    List<Product> productsList = [];
     for (int i = 0; i < collectionData.docs.length; i++) {
       print(collectionData.docs[i].data()['name']);
       String imageUrl =
           await downloadURL("plants", collectionData.docs[i].data()['name']);
-      plantId.add(Product(
+      productsList.add(Product(
         title: collectionData.docs[i].data()['name'],
         desc: collectionData.docs[i].data()['desc'],
         image: imageUrl,
         price: collectionData.docs[i].data()['price'],
       ));
     }
+
+    return productsList;
   }
 
-  Future getAyurId() async {
+  Future<List<Product>> getAyurId() async {
     var collectionData =
         await FirebaseFirestore.instance.collection('ayur').get();
 
-    ayurId.clear();
+    List<Product> ayurList = [];
     print(collectionData.docs.length);
     for (int i = 0; i < collectionData.docs.length; i++) {
       String imageUrl =
           await downloadURL("ayur", collectionData.docs[i].data()['tag']);
       print("imageUrl: " + imageUrl);
-      ayurId.add(Product(
+      ayurList.add(Product(
         title: collectionData.docs[i].data()['name'],
         desc: (collectionData.docs[i].data()['desc'] +
             "\n" +
@@ -80,12 +82,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ));
       print("i: " + i.toString());
     }
-    print("AyurLen: " + ayurId.length.toString());
+
+    return ayurList;
   }
 
   @override
   void initState() {
-    getPlantId();
+    plantId = getPlantId();
+    ayurId = getAyurId();
     super.initState();
   }
 
@@ -135,11 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     Positioned(
                       child: Column(
                         children: [
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 8),
-                            child:
-                                Text("treely", style: TextStyle(fontSize: 60)),
+                            child: InkWell(
+                                onTap: () => FirebaseAuth.instance.signOut(),
+                                child: Text("treely",
+                                    style: TextStyle(fontSize: 60))),
                           ),
                           Expanded(
                             child: currentNavBarIndex != 0
@@ -148,109 +154,145 @@ class _HomeScreenState extends State<HomeScreen> {
                                         const EdgeInsets.only(bottom: 100.0),
                                     padding: const EdgeInsets.all(8),
                                     child: FutureBuilder(
-                                        future: getAyurId(),
-                                        builder: (context, snapshot) {
-                                          return GridView.builder(
-                                            itemCount: ayurId.length,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              childAspectRatio: 0.75,
-                                              mainAxisSpacing: 20,
-                                              crossAxisSpacing: 20,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              return ProductCard(
-                                                product: ayurId[index],
-                                                press: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    PageRouteBuilder(
-                                                      transitionDuration:
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                      reverseTransitionDuration:
-                                                          const Duration(
-                                                              milliseconds:
-                                                                  500),
-                                                      pageBuilder: (context,
-                                                              animation,
-                                                              secondaryAnimation) =>
-                                                          FadeTransition(
-                                                        opacity: animation,
-                                                        child: DetailsScreen(
-                                                          product:
-                                                              ayurId[index],
-                                                          onProductAdd: () {},
+                                        future: ayurId,
+                                        builder: (context,
+                                            AsyncSnapshot<List<Product>>
+                                                snapshot) {
+                                          if (snapshot.hasData &&
+                                              snapshot.data != null) {
+                                            return GridView.builder(
+                                              itemCount: snapshot.data?.length,
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio: 0.75,
+                                                mainAxisSpacing: 20,
+                                                crossAxisSpacing: 20,
+                                              ),
+                                              itemBuilder: (context, index) {
+                                                return ProductCard(
+                                                  product:
+                                                      snapshot.data![index],
+                                                  press: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                        transitionDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        reverseTransitionDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        pageBuilder: (context,
+                                                                animation,
+                                                                secondaryAnimation) =>
+                                                            FadeTransition(
+                                                          opacity: animation,
+                                                          child: DetailsScreen(
+                                                            product: snapshot
+                                                                .data![index],
+                                                            onProductAdd: () {},
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return const Center(
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: kDarkBrown,
+                                                color: kSecondaryColor,
+                                              ),
+                                            );
+                                          }
                                         }),
                                   )
                                 : Container(
                                     margin:
                                         const EdgeInsets.only(bottom: 100.0),
                                     padding: const EdgeInsets.all(8),
-                                    child: GridView.builder(
-                                      itemCount: plantId.length,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 0.75,
-                                        mainAxisSpacing: 20,
-                                        crossAxisSpacing: 20,
-                                      ),
-                                      itemBuilder: (context, index) {
-                                        print(plantId.length);
-                                        return ProductCard(
-                                          product: plantId[index],
-                                          press: () {
-                                            Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration:
-                                                    const Duration(
-                                                        milliseconds: 500),
-                                                reverseTransitionDuration:
-                                                    const Duration(
-                                                        milliseconds: 500),
-                                                pageBuilder: (context,
-                                                        animation,
-                                                        secondaryAnimation) =>
-                                                    FadeTransition(
-                                                  opacity: animation,
-                                                  child: DetailsScreen(
-                                                    product: plantId[index],
-                                                    onProductAdd: () {
-                                                      final cartNum = ref.watch(
-                                                              cartNumProvider) ??
-                                                          1;
-                                                      for (var i = 0;
-                                                          i < cartNum;
-                                                          i++) {
-                                                        controller
-                                                            .addProductToCart(
-                                                                plantId[index]);
-                                                      }
-                                                      ref
-                                                          .read(cartNumProvider
-                                                              .notifier)
-                                                          .update((state) => 1);
-                                                    },
-                                                  ),
-                                                ),
+                                    child: FutureBuilder(
+                                        future: plantId,
+                                        builder: (context,
+                                            AsyncSnapshot<List<Product>>
+                                                snapshot) {
+                                          if (snapshot.hasData &&
+                                              snapshot.data != null) {
+                                            return GridView.builder(
+                                              itemCount: snapshot.data?.length,
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio: 0.75,
+                                                mainAxisSpacing: 20,
+                                                crossAxisSpacing: 20,
+                                              ),
+                                              itemBuilder: (context, index) {
+                                                print(snapshot.data?.length);
+                                                return ProductCard(
+                                                  product:
+                                                      snapshot.data![index],
+                                                  press: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      PageRouteBuilder(
+                                                        transitionDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        reverseTransitionDuration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        pageBuilder: (context,
+                                                                animation,
+                                                                secondaryAnimation) =>
+                                                            FadeTransition(
+                                                          opacity: animation,
+                                                          child: DetailsScreen(
+                                                            product: snapshot
+                                                                .data![index],
+                                                            onProductAdd: () {
+                                                              final cartNum =
+                                                                  ref.watch(
+                                                                          cartNumProvider) ??
+                                                                      1;
+                                                              for (var i = 0;
+                                                                  i < cartNum;
+                                                                  i++) {
+                                                                controller.addProductToCart(
+                                                                    snapshot.data![
+                                                                        index]);
+                                                              }
+                                                              ref
+                                                                  .read(cartNumProvider
+                                                                      .notifier)
+                                                                  .update(
+                                                                      (state) =>
+                                                                          1);
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            return const Center(
+                                              child: CircularProgressIndicator(
+                                                backgroundColor: kDarkBrown,
+                                                color: kSecondaryColor,
                                               ),
                                             );
-                                          },
-                                        );
-                                      },
-                                    ),
+                                          }
+                                        }),
                                   ),
                           ),
                         ],

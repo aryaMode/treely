@@ -1,10 +1,13 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:treely/config/color_pallet.dart';
 
 import '../../../routes/routes.gr.dart';
 
+@RoutePage()
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,8 +25,11 @@ class _SplashScreenState extends State<SplashScreen> {
         SharedPreferences pref = await SharedPreferences.getInstance();
         int? initScreen = await pref.getInt("initScreen");
         print(await pref.getInt("initScreen"));
-        await context.router.replace(
-            initScreen != 1 ? const WelcomeScreen() : const OnboardingScreen());
+        await context.router.replace(initScreen != 1
+            ? (FirebaseAuth.instance.currentUser == null
+                ? const WelcomeScreen()
+                : const HomeScreen())
+            : const OnboardingScreen() );
       },
     );
   }

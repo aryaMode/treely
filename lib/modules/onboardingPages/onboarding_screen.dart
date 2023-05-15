@@ -9,7 +9,7 @@ import '../../config/images.dart';
 import '../../widgets/image_slider.dart';
 import '../../widgets/rounded_button.dart';
 
-
+@RoutePage()
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
 

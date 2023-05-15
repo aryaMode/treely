@@ -11,6 +11,7 @@ import '../../widgets/rounded_button.dart';
 import '../../widgets/rounded_input_field.dart';
 import '../../widgets/rounded_password_field.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -20,12 +21,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<State> _LoaderDialog = new GlobalKey<State>();
+  FirebaseAuth auth = FirebaseAuth.instance;
   bool loading = false;
+  final emailAddress = TextEditingController();
+  final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    print(auth.currentUser ?? "Not Signed In");
     Size size = MediaQuery.of(context).size;
-    String emailAddress = "";
-    String password = "";
     return Scaffold(
       body: LoaderOverlay(
         child: SafeArea(
@@ -49,17 +52,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: size.height * 0.03),
                 RoundedInputField(
                   hintText: "Email",
+                  keyboardType: TextInputType.emailAddress,
                   prefixWidget: const Icon(
                     Icons.mail,
                     color: kPrimaryColor,
                   ),
                   onChanged: (value) {
-                    emailAddress = value;
+                    emailAddress.text = value;
                   },
                 ),
                 RoundedPasswordField(
                   onChanged: (value) {
-                    password = value;
+                    password.text = value;
                   },
                 ),
                 RoundedButton(
@@ -70,9 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         loading = true;
                       });
                       context.loaderOverlay.show();
-                      UserCredential user = await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: emailAddress, password: password);
+
+                      UserCredential user =
+                          await auth.signInWithEmailAndPassword(
+                              email: emailAddress.text,
+                              password: password.text);
                       user.credential ??
                           context.router.push(const HomeScreen());
                     } on FirebaseAuthException catch (e) {

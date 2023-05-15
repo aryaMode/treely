@@ -48,7 +48,7 @@ class WelcomeScreen extends StatelessWidget {
                 RoundedButton(
                   text: "Sign Up",
                   onPressed: () {
-                    context.router.push(const SignupScreen());
+                    context.router.push( SignupScreen());
                   },
                 ),
               ],
